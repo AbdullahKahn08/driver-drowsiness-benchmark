@@ -15,7 +15,6 @@ myenv/
 *.pkl
 *.pickle
 # Saved Models / Weights / Checkpoints
-models/
 checkpoints/
 artifacts/
 *.pth
