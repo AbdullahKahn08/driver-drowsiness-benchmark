@@ -6,6 +6,9 @@ def get_resnet50():
     
     for paramter in model.parameters():
         paramter.requires_grad = False
+
+    for parameter in model.layer4.parameters():
+        parameter.requires_grad = True
     
     model.fc = torch.nn.Linear(2048,2)
 

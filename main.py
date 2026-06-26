@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
     loss_function = CrossEntropyLoss()
 
-    optimzer =  Adam(params=model.fc.parameters(), lr=LEARNING_RATE)
+    optimzer =  Adam(filter(lambda p: p.requires_grad(),model.parameters()), lr=LEARNING_RATE)
 
     train(model=model,train_dataloader=training,val_dataloader=val,loss_fn=loss_function,optimizer=optimzer,num_epochs=NUM_OF_EPOCHS,device=device)
 
