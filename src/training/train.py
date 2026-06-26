@@ -68,8 +68,7 @@ def train(model,train_dataloader,val_dataloader,loss_fn,optimizer,num_epochs,dev
             'validation_accuracy': val_accuracy,
             'epoch': i
         })
-        wandb.finish()
         print(f"Epoch: {i}, Training Loss: {train_loss}, Validation Loss: {val_loss}\nTraining Acccuracy: {train_accuracy}, Validation Acuracy: {val_accuracy}")
-
+    wandb.finish()
             
 
