@@ -30,7 +30,7 @@ class DrowsinessDataset(Dataset):
         image = Image.open(self.image_paths[idx])
         label = self.image_labels[idx]
         
-        if self.transform == None:
+        if self.transform:
             transformed_image = self.transform(image)
             return transformed_image, label
             
