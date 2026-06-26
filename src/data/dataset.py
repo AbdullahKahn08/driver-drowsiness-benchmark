@@ -4,7 +4,7 @@ from PIL import Image
 
 
 class DrowsinessDataset(Dataset):
-    def __init__(self,path,transform):
+    def __init__(self,path,transform = None):
 
         self.image_paths = []
         self.image_labels = []

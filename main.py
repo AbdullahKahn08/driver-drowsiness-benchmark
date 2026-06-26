@@ -1,27 +1,27 @@
 import torch
-from models.resnet50 import get_resnet50
-from data.dataloader import get_dataloaders
+from src.models.resnet50 import get_resnet50
+from src.data.dataloader import get_dataloaders
 from torch.nn import CrossEntropyLoss
 from torch.optim import Adam
-from training.train import train
+from src.training.train import train
+
+if __name__ == '__main__':
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+    #GLOBAL PARAMETERS
+    PATH = r"G:\Driver Drowsiness Detection\data\raw\Driver Drowsiness Dataset (DDD)"
+    LEARNING_RATE = 0.001
+    BATCH_SIZE = 32
+    NUM_OF_EPOCHS = 10
 
 
-device = torch.cuda._get_device(0)
+    training,val,test = get_dataloaders(path=PATH,batchSize=BATCH_SIZE)
 
-#GLOBAL PARAMETERS
-PATH = "G:\Driver Drowsiness Detection\data\raw\Driver Drowsiness Dataset (DDD)"
-LEARNING_RATE = 0.001
-BATCH_SIZE = 32
-NUM_OF_EPOCHS = 10
+    model = get_resnet50()
 
+    loss_function = CrossEntropyLoss()
 
-training,val,test = get_dataloaders(path=PATH)
+    optimzer =  Adam(params=model.fc.parameters(), lr=LEARNING_RATE)
 
-model = get_resnet50()
-
-loss_function = CrossEntropyLoss()
-
-optimzer =  Adam()
-
-train(model=model,train_dataloader=training,val_dataloader=val,loss_fn=loss_function,optimizer=optimzer,num_epochs=NUM_OF_EPOCHS,device=device)
+    train(model=model,train_dataloader=training,val_dataloader=val,loss_fn=loss_function,optimizer=optimzer,num_epochs=NUM_OF_EPOCHS,device=device)
 
