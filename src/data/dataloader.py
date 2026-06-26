@@ -17,7 +17,7 @@ class TransformSubset(Dataset):
         return transformed_image, label
        
 
-def get_dataloaders(path):
+def get_dataloaders(path,batchSize):
     dataSet = DrowsinessDataset(path=path)
 
     trainDataSet, valDataSet, testDataSet = random_split(dataset=dataSet,lengths=[0.8,0.1,0.1],)
@@ -26,9 +26,9 @@ def get_dataloaders(path):
     transformedValidation = TransformSubset(subset=valDataSet,transformtype=testVal_transform_pipeline)
     transformedTest = TransformSubset(subset=testDataSet,transformtype=testVal_transform_pipeline)
 
-    train_data = DataLoader(dataset=transformedTrain,batch_size=32,shuffle=True,num_workers=3)
-    val_data = DataLoader(dataset=transformedValidation,batch_size=32,shuffle=False,num_workers=3)
-    test_data = DataLoader(dataset=transformedTest,batch_size=32,shuffle=False,num_workers=3)
+    train_data = DataLoader(dataset=transformedTrain,batch_size=batchSize,shuffle=True,num_workers=3)
+    val_data = DataLoader(dataset=transformedValidation,batch_size=batchSize,shuffle=False,num_workers=3)
+    test_data = DataLoader(dataset=transformedTest,batch_size=batchSize,shuffle=False,num_workers=3)
     
     return train_data,val_data,test_data
 
