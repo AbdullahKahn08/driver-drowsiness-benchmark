@@ -9,7 +9,7 @@ if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     #GLOBAL PARAMETERS
-    PATH = r"G:\Driver Drowsiness Detection\data\raw\Driver Drowsiness Dataset (DDD)"
+    PATH = r"data/raw/Driver Drowsiness Dataset (DDD)"
     LEARNING_RATE = 0.001
     BATCH_SIZE = 32
     NUM_OF_EPOCHS = 10
