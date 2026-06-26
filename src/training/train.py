@@ -16,6 +16,8 @@ def train_one_epoch(model,dataloader,loss_fn,optimizer,device):
         image = image.to(device)
         label = label.to(device)
         pred = model(image)
+        pred_label = torch.argmax(pred, dim=1)
+        corret_label = (pred_label == label).sum().item()
         loss =  loss_fn(pred, label)
         total_loss.append(loss.item())
         optimizer.zero_grad()
