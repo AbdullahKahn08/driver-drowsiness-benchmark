@@ -4,7 +4,7 @@ from torch.nn import CrossEntropyLoss
 from torch.optim import Adam
 import numpy as np
 import torch
-import tqdm as tqdm
+from tqdm import tqdm
 
 
 def train_one_epoch(model,dataloader,loss_fn,optimizer,device):
