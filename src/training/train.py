@@ -5,6 +5,7 @@ from torch.optim import Adam
 import numpy as np
 import torch
 from tqdm import tqdm
+import wandb
 
 
 def train_one_epoch(model,dataloader,loss_fn,optimizer,device):
@@ -53,9 +54,21 @@ def validate_one_epoch(model,dataloader,loss_fn,device):
     return accuracy, np.mean(total_val_loss)
 
 def train(model,train_dataloader,val_dataloader,loss_fn,optimizer,num_epochs,device):
+    wandb.init(project="driver-drowsiness-detection",config={
+        'epochs': num_epochs,
+        'learning_rate':optimizer.param_groups[0]['lr']
+    })
     for i in range(1,num_epochs+1):
         train_accuracy,train_loss = train_one_epoch(model,train_dataloader,loss_fn,optimizer,device)
         val_accuracy, val_loss = validate_one_epoch(model,val_dataloader,loss_fn,device)
+        wandb.log({
+            'train_loss': train_loss,
+            'validation_loss': val_loss,
+            'training_accuracy': train_accuracy,
+            'validation_accuracy': val_accuracy,
+            'epoch': i
+        })
+        wandb.finish()
         print(f"Epoch: {i}, Training Loss: {train_loss}, Validation Loss: {val_loss}\nTraining Acccuracy: {train_accuracy}, Validation Acuracy: {val_accuracy}")
 
             
