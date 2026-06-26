@@ -14,7 +14,7 @@ def train_one_epoch(model,dataloader,loss_fn,optimizer,device):
     
     model.to(device)
     model.train()
-    for image, label in tqdm(dataloader,desc="Training"):
+    for image, label in tqdm(dataloader,desc="Training",mininterval=1):
        
         image = image.to(device)
         label = label.to(device)
@@ -39,7 +39,7 @@ def validate_one_epoch(model,dataloader,loss_fn,device):
     model.to(device)
     model.eval()
     with torch.no_grad():
-        for image,label in tqdm(dataloader,desc="Validation"):
+        for image,label in tqdm(dataloader,desc="Validation",mininterval=1):
             image = image.to(device)
             label = label.to(device)
             pred = model(image)
