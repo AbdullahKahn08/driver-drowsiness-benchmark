@@ -4,48 +4,59 @@ from torch.nn import CrossEntropyLoss
 from torch.optim import Adam
 import numpy as np
 import torch
+import tqdm as tqdm
 
 
 def train_one_epoch(model,dataloader,loss_fn,optimizer,device):
     total_loss = []
+    total_correct = 0
+    total_samples = 0
     
     model.to(device)
     model.train()
-    for image, label in dataloader:
+    for image, label in tqdm(dataloader,desc="Training"):
        
         image = image.to(device)
         label = label.to(device)
         pred = model(image)
         pred_label = torch.argmax(pred, dim=1)
-        corret_label = (pred_label == label).sum().item()
+        total_correct += (pred_label == label).sum().item()
+        total_samples += label.size(0)
         loss =  loss_fn(pred, label)
         total_loss.append(loss.item())
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
 
-    return np.mean(total_loss)
+    accuracy = (total_correct/total_samples) * 100
+    return accuracy, np.mean(total_loss)
 
 def validate_one_epoch(model,dataloader,loss_fn,device):
     total_val_loss = []
+    total_correct = 0
+    total_samples = 0
 
     model.to(device)
     model.eval()
     with torch.no_grad():
-        for image,label in dataloader:
+        for image,label in tqdm(dataloader,desc="Validation"):
             image = image.to(device)
             label = label.to(device)
             pred = model(image)
+            pred_label = torch.argmax(pred, dim=1)
+            total_correct += (pred_label == label).sum().item()
+            total_samples += label.size(0)
             loss = loss_fn(pred, label)
             total_val_loss.append(loss.item())
     
-    return np.mean(total_val_loss)
+    accuracy = (total_correct/total_samples) * 100
+    return accuracy, np.mean(total_val_loss)
 
 def train(model,train_dataloader,val_dataloader,loss_fn,optimizer,num_epochs,device):
     for i in range(1,num_epochs+1):
-        train_loss = train_one_epoch(model,train_dataloader,loss_fn,optimizer,device)
-        val_loss = validate_one_epoch(model,val_dataloader,loss_fn,device)
-        print(f"Epoch: {i}, Training Loss: {train_loss}, Validation Loss: {val_loss}")
+        train_accuracy,train_loss = train_one_epoch(model,train_dataloader,loss_fn,optimizer,device)
+        val_accuracy, val_loss = validate_one_epoch(model,val_dataloader,loss_fn,device)
+        print(f"Epoch: {i}, Training Loss: {train_loss}, Validation Loss: {val_loss}\nTraining Acccuracy: {train_accuracy}, Validation Acuracy: {val_accuracy}")
 
             
 
