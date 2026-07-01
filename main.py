@@ -26,5 +26,5 @@ if __name__ == '__main__':
 
     scheduler = ReduceLROnPlateau(optimizer=optimzer,mode='min',patience=5,factor=0.5)
 
-    train(model=model,train_dataloader=training,val_dataloader=val,loss_fn=loss_function,optimizer=optimzer,num_epochs=NUM_OF_EPOCHS,device=device)
+    train(model=model,train_dataloader=training,val_dataloader=val,loss_fn=loss_function,optimizer=optimzer,num_epochs=NUM_OF_EPOCHS,device=device,scheduler=scheduler)
 
