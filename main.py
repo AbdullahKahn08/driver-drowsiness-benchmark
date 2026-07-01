@@ -10,10 +10,9 @@ if __name__ == '__main__':
 
     #GLOBAL PARAMETERS
     PATH = r"data/raw/Driver Drowsiness Dataset (DDD)"
-    LEARNING_RATE = 0.00001
+    LEARNING_RATE = 0.0001
     BATCH_SIZE = 32
     NUM_OF_EPOCHS = 20
-
 
 
     training,val,test = get_dataloaders(path=PATH,batchSize=BATCH_SIZE)
