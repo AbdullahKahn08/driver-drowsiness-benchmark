@@ -53,7 +53,9 @@ def validate_one_epoch(model,dataloader,loss_fn,device):
     accuracy = (total_correct/total_samples) * 100
     return accuracy, np.mean(total_val_loss)
 
-def train(model,train_dataloader,val_dataloader,loss_fn,optimizer,num_epochs,device):
+def train(model,train_dataloader,val_dataloader,loss_fn,optimizer,num_epochs,device,scheduler):
+    best_val_accuracy = 0.0
+    
     wandb.init(project="driver-drowsiness-detection",config={
         'epochs': num_epochs,
         'learning_rate':optimizer.param_groups[0]['lr']
@@ -61,6 +63,11 @@ def train(model,train_dataloader,val_dataloader,loss_fn,optimizer,num_epochs,dev
     for i in range(1,num_epochs+1):
         train_accuracy,train_loss = train_one_epoch(model,train_dataloader,loss_fn,optimizer,device)
         val_accuracy, val_loss = validate_one_epoch(model,val_dataloader,loss_fn,device)
+        if val_accuracy > best_val_accuracy:
+            best_val_accuracy = val_accuracy
+            torch.save(model.state_dict(),"experiments/best_resnet50.pth")
+            print(f"Model saved with accuracy: {best_val_accuracy}")
+        scheduler.step(val_loss)
         wandb.log({
             'train_loss': train_loss,
             'validation_loss': val_loss,
