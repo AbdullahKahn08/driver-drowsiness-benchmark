@@ -63,6 +63,7 @@ def train(model,train_dataloader,val_dataloader,loss_fn,optimizer,num_epochs,dev
     for i in range(1,num_epochs+1):
         train_accuracy,train_loss = train_one_epoch(model,train_dataloader,loss_fn,optimizer,device)
         val_accuracy, val_loss = validate_one_epoch(model,val_dataloader,loss_fn,device)
+        print(f"Epoch: {i}, Training Loss: {train_loss}, Validation Loss: {val_loss}\nTraining Acccuracy: {train_accuracy}, Validation Acuracy: {val_accuracy}")
         if val_accuracy > best_val_accuracy:
             best_val_accuracy = val_accuracy
             torch.save(model.state_dict(),"experiments/best_resnet50.pth")
@@ -76,7 +77,6 @@ def train(model,train_dataloader,val_dataloader,loss_fn,optimizer,num_epochs,dev
             'epoch': i,
             'learning_rate': optimizer.param_groups[0]['lr']
         })
-        print(f"Epoch: {i}, Training Loss: {train_loss}, Validation Loss: {val_loss}\nTraining Acccuracy: {train_accuracy}, Validation Acuracy: {val_accuracy}")
     wandb.finish()
             
 
