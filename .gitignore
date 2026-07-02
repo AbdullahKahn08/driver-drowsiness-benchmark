@@ -5,6 +5,7 @@
 data/raw/
 data/processed/
 myenv/
+data/
 *.csv
 *.json
 *.parquet
