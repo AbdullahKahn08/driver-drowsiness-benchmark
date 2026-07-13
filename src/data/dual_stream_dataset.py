@@ -26,5 +26,21 @@ class DualStreamDataset(Dataset):
                 self.eyes.append(image)
                 self.mouths.append(mouth_image_path)
                 self.labels.append(0)
+    
+    def __len__(self):
+        if len(self.eyes) == len(self.mouths) == len(self.labels):
+            return len(self.eyes)
+        else:
+            raise ValueError("Mismatach occured in the index of eyes and mouth")
+
+    def __getitem__(self, index):
+        eye_image = Image.open(self.eyes[index])
+        mouth_image = Image.open(self.mouths[index])
+
+        if self.transforms: 
+            eye_image = self.transforms(eye_image)
+            mouth_image = self.transforms(mouth_image)
+
+        return eye_image,mouth_image,self.labels[index]
 
         
