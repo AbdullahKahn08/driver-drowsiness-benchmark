@@ -4,28 +4,27 @@ from PIL import Image
 
 class DualStreamDataset(Dataset):
     def __init__(self,path,transforms=None):
-        self.eye_images = []
-        self.mouth_images = []
+        self.eyes = []
+        self.mouths = []
         self.labels = []
-        
-        self.dataset_path = Path(path)
         self.transforms = transforms
 
-        eyes_folder = self.dataset_path / "eyes"
-        mouths_folder = self.dataset_path / "mouth"
+        root_folder = Path(path)
+        drowsy_folder = root_folder / "Drowsy"
+        non_drowsy_folder = root_folder / "Non Drowsy"
 
-        if "Drowsy" in str(self.dataset_path):
-            for image in eyes_folder.glob("*.png"):
-                self.eye_images.append(image)
+        for image in (drowsy_folder/"eyes").glob("*.png"):
+            mouth_image_path = drowsy_folder / "mouth" / image.name
+            if mouth_image_path.exists():
+                self.eyes.append(image)
+                self.mouths.append(mouth_image_path)
                 self.labels.append(1)
-            for image in mouths_folder.glob("*.png"):
-                self.mouth_images.append(image)
-        else:
-            for image in eyes_folder.glob("*.png"):
-                self.eye_images.append(image)
+        
+        for image in (non_drowsy_folder/"eyes").glob("*.png"):
+            mouth_image_path = non_drowsy_folder / "mouth" / image.name
+            if mouth_image_path.exists():
+                self.eyes.append(image)
+                self.mouths.append(mouth_image_path)
                 self.labels.append(0)
-            for image in mouths_folder.glob("*.png"):
-                self.mouth_images.append(image)
-            
 
         
