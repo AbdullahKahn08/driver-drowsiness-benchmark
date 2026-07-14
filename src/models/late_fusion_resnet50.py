@@ -31,15 +31,12 @@ class LateFusionResNet(torch.nn.Module):
             mouth_backbone.avgpool
         )
 
-        #self.fusion_conv = torch.nn.Conv2d(4096,2048,kernel_size=1)
-
         self.fc = torch.nn.Linear(4096,2)
     
     def forward(self,eyes_input,mouths_input):
         eye_features = self.eye_branch(eyes_input)
         mouth_features = self.mouth_branch(mouths_input)
         features_concatente = torch.cat([eye_features,mouth_features],dim=1)
-        #late_fusion = self.fusion_conv(features_concatente)
         combined_features = torch.flatten(features_concatente,1)
         output = self.fc(combined_features)
         return output
