@@ -70,6 +70,6 @@ non_drowsy_images = [non_drowsy_image for non_drowsy_image in non_drowsy_images_
 mp_face_mesh = mp.solutions.face_mesh
 face_mesh = mp_face_mesh.FaceMesh(static_image_mode=True,max_num_faces=1)
 
-preprocess_images(images=drowsy_images,face_mesh=face_mesh,left_eye=LEFT_EYE,right_eye=RIGHT_EYE,mouth=MOUTH,eyes_path=non_drowsy_eyes_path,mouth_path=non_drowsy_mouth_path)
+preprocess_images(images=drowsy_images,face_mesh=face_mesh,left_eye=LEFT_EYE,right_eye=RIGHT_EYE,mouth=MOUTH,eyes_path=drowsy_eyes_path,mouth_path=drowsy_mouth_path)
 preprocess_images(images=non_drowsy_images,face_mesh=face_mesh,left_eye=LEFT_EYE,right_eye=RIGHT_EYE,mouth=MOUTH,eyes_path=non_drowsy_eyes_path,mouth_path=non_drowsy_mouth_path)
 
