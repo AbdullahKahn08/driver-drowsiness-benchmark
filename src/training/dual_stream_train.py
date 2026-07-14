@@ -1,4 +1,4 @@
-from src.models.early_fusion_resnet50 import EarlyFusionResNet
+from src.models.late_fusion_resnet50 import LateFusionResNet
 from src.data.dual_stream_dataloader import get_dataloaders
 from torch.nn import CrossEntropyLoss
 from torch.optim import Adam
@@ -68,7 +68,7 @@ def train(model,train_dataloader,val_dataloader,loss_fn,optimizer,num_epochs,dev
         print(f"Epoch: {i}, Training Loss: {train_loss}, Validation Loss: {val_loss}\nTraining Acccuracy: {train_accuracy}, Validation Acuracy: {val_accuracy}")
         if val_accuracy > best_val_accuracy:
             best_val_accuracy = val_accuracy
-            torch.save(model.state_dict(),"experiments/best_early_fusion_resnet50.pth")
+            torch.save(model.state_dict(),"experiments/best_late_fusion_resnet50.pth")
             print(f"Model saved with accuracy: {best_val_accuracy}")
         scheduler.step(val_loss)
         wandb.log({
