@@ -25,12 +25,6 @@ class EarlyFusionResNet(torch.nn.Module):
             mouth_backbone.layer2
         )
 
-        for param in self.eye_branch.parameters():
-            param.requires_grad = False
-
-        for param in self.mouth_branch.parameters():
-            param.requires_grad = False
-
         self.fusion_conv = torch.nn.Conv2d(1024,512,kernel_size=1)
 
         self.shared_layer = torch.nn.Sequential(
