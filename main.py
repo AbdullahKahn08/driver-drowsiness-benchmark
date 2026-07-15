@@ -1,38 +1,56 @@
 import torch
 from src.models.resnet50 import get_resnet50
+from src.models.early_fusion_resnet50  import EarlyFusionResNet
+from src.models.late_fusion_resnet50 import LateFusionResNet
 from src.data.dataloader import get_dataloaders
+from src.data.dual_stream_dataloader import get_dual_stream_dataloaders
 from torch.nn import CrossEntropyLoss
 from torch.optim import Adam
 from src.training.train import train
+from src.training.dual_stream_train import dual_stream_train
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 import argparse
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--model",type=str,required=True,choices=["resnet50","early_fusion_resnet50","late_fusion_resnet50"])
-parser.add_argument("--epochs",type=int,default=20)
-parser.add_argument("--lr",type=float,default=0.0001)
-parser.add_argument("--batch_size",type=int,default=32)
-args = parser.parse_args()
 
 if __name__ == '__main__':
+
+    RAW_PATH = r"data/raw/Driver Drowsiness Dataset (DDD)"
+    PROCESSED_PATH = r"data/processed"
+
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    #GLOBAL PARAMETERS
-    PATH = r"data/raw/Driver Drowsiness Dataset (DDD)"
-    LEARNING_RATE = 0.0001
-    BATCH_SIZE = 32
-    NUM_OF_EPOCHS = 20
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--model",type=str,required=True,choices=["resnet50","early_fusion_resnet50","late_fusion_resnet50"])
+    parser.add_argument("--epochs",type=int,default=20)
+    parser.add_argument("--lr",type=float,default=0.0001)
+    parser.add_argument("--batch_size",type=int,default=32)
+    args = parser.parse_args()
 
 
-    training,val,test = get_dataloaders(path=PATH,batchSize=BATCH_SIZE)
+    if args.model == "resnet50":
+        model = get_resnet50()
+        training,val,test = get_dataloaders(path=RAW_PATH,batchSize=args.batch_size)
 
-    model = get_resnet50()
-
+    else:
+        model = EarlyFusionResNet() if args.model == "early_fusion_resnet50"  else LateFusionResNet()
+        training,val,test = get_dual_stream_dataloaders(path=PROCESSED_PATH,batchSize=args.batch_size)
+        
     loss_function = CrossEntropyLoss()
 
-    optimzer =  Adam(filter(lambda p: p.requires_grad,model.parameters()), lr=LEARNING_RATE)
+    optimzer =  Adam(filter(lambda p: p.requires_grad,model.parameters()), lr=args.lr)
 
     scheduler = ReduceLROnPlateau(optimizer=optimzer,mode='min',patience=5,factor=0.5)
 
-    train(model=model,train_dataloader=training,val_dataloader=val,loss_fn=loss_function,optimizer=optimzer,num_epochs=NUM_OF_EPOCHS,device=device,scheduler=scheduler)
+    if args.model == "resnet50":
+        train(model=model,train_dataloader=training,val_dataloader=val,loss_fn=loss_function,optimizer=optimzer,
+          num_epochs=args.epochs,device=device,scheduler=scheduler,save_name=args.model)
+    
+    else:
+        dual_stream_train(model=model,train_dataloader=training,val_dataloader=val,loss_fn=loss_function,optimizer=optimzer,
+          num_epochs=args.epochs,device=device,scheduler=scheduler,save_name=args.model)
+
+
+
+
+
 
