@@ -1,7 +1,3 @@
-from src.models.resnet50 import get_resnet50
-from src.data.dataloader import get_dataloaders
-from torch.nn import CrossEntropyLoss
-from torch.optim import Adam
 import numpy as np
 import torch
 from tqdm import tqdm

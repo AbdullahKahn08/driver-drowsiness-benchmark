@@ -1,7 +1,3 @@
-from src.models.late_fusion_resnet50 import LateFusionResNet
-from src.data.dual_stream_dataloader import get_dataloaders
-from torch.nn import CrossEntropyLoss
-from torch.optim import Adam
 import numpy as np
 import torch
 from tqdm import tqdm
