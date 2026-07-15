@@ -5,6 +5,14 @@ from torch.nn import CrossEntropyLoss
 from torch.optim import Adam
 from src.training.train import train
 from torch.optim.lr_scheduler import ReduceLROnPlateau
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--model",type=str,required=True,choices=["resnet50","early_fusion_resnet50","late_fusion_resnet50"])
+parser.add_argument("--epochs",type=int,default=20)
+parser.add_argument("--lr",type=float,default=0.0001)
+parser.add_argument("--batch_size",type=int,default=32)
+args = parser.parse_args()
 
 if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

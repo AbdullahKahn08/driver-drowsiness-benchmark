@@ -19,7 +19,7 @@ class DualStreamTransformSubset(Dataset):
         return eye_image,mouth_image, label
        
 
-def get_dataloaders(path,batchSize):
+def get_dual_stream_dataloaders(path,batchSize):
     dataSet = DualStreamDataset(path=path)
 
     trainDataSet, valDataSet, testDataSet = random_split(dataset=dataSet,lengths=[0.8,0.1,0.1],)

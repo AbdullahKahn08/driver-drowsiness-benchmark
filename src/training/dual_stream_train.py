@@ -55,7 +55,7 @@ def validate_one_epoch(model,dataloader,loss_fn,device):
     accuracy = (total_correct/total_samples) * 100
     return accuracy, np.mean(total_val_loss)
 
-def train(model,train_dataloader,val_dataloader,loss_fn,optimizer,num_epochs,device,scheduler):
+def dual_stream_train(model,train_dataloader,val_dataloader,loss_fn,optimizer,num_epochs,device,scheduler):
     best_val_accuracy = 0.0
     
     wandb.init(project="driver-drowsiness-detection",config={
