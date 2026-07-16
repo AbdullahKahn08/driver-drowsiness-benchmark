@@ -13,7 +13,7 @@ class LateFusionMobileNetv3(torch.nn.Module):
         for param in self.eye_branch[0].parameters():
             param.requires_grad = False
 
-        for param in self.eye_branch[0].parameters():
+        for param in self.mouth_branch[0].parameters():
             param.requires_grad = False
 
         self.avgpool = eye_backbone.avgpool
@@ -23,8 +23,9 @@ class LateFusionMobileNetv3(torch.nn.Module):
     def forward(self,eyes_input,mouth_input):
         eye_features = self.eye_branch(eyes_input)
         mouth_features = self.mouth_branch(mouth_input)
+        eye_features = self.avgpool(eye_features)
+        mouth_features = self.avgpool(mouth_features)
         combined_features = torch.cat([eye_features,mouth_features],dim=1)
-        combined_features = self.avgpool(combined_features)
         combined_features = torch.flatten(combined_features,1)
         output = self.fc(combined_features)
         return output
