@@ -5,6 +5,7 @@ from src.models.late_fusion_resnet50 import LateFusionResNet
 from src.models.mobilenetv3 import get_mobilenetv3
 from src.models.early_fusion_mobilenetv3 import EarlyFusionMobileNetv3
 from src.models.late_fusion_mobilenetv3 import LateFusionMobileNetv3
+from src.models.googlenet import get_googlenet
 from src.data.dataloader import get_dataloaders
 from src.data.dual_stream_dataloader import get_dual_stream_dataloaders
 from torch.nn import CrossEntropyLoss
@@ -24,18 +25,21 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--model",type=str,required=True,choices=["resnet50","early_fusion_resnet50","late_fusion_resnet50",
-                                                                  "mobilenetv3","early_fusion_mobilenetv3","late_fusion_mobilenetv3"])
+                                                                  "mobilenetv3","early_fusion_mobilenetv3","late_fusion_mobilenetv3",
+                                                                  "googlenet"])
     parser.add_argument("--epochs",type=int,default=20)
     parser.add_argument("--lr",type=float,default=0.0001)
     parser.add_argument("--batch_size",type=int,default=32)
     args = parser.parse_args()
 
 
-    if args.model == "resnet50" or args.model == "mobilenetv3":
+    if args.model in ["resnet50","mobilenetv3","googlenet"]:
         if args.model == "resnet50":
             model = get_resnet50()
-        else:
+        elif args.model == "mobilenetv3":
             model = get_mobilenetv3()
+        else:
+            model = get_googlenet()
         training, val, test = get_dataloaders(path=RAW_PATH, batchSize=args.batch_size)
 
     elif args.model == "early_fusion_resnet50":
@@ -60,7 +64,7 @@ if __name__ == '__main__':
 
     scheduler = ReduceLROnPlateau(optimizer=optimzer,mode='min',patience=5,factor=0.5)
 
-    if args.model in ["resnet50","mobilenetv3"]:
+    if args.model in ["resnet50","mobilenetv3","googlenet"]:
         train(model=model,train_dataloader=training,val_dataloader=val,loss_fn=loss_function,optimizer=optimzer,
           num_epochs=args.epochs,device=device,scheduler=scheduler,save_name=args.model)
     
