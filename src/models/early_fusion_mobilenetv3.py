@@ -10,12 +10,6 @@ class EarlyFusionMobileNetv3(torch.nn.Module):
         self.eye_branch = eye_backbone.features[0:9]
         self.mouth_branch = mouth_backbone.features[0:9]
 
-        for param in self.eye_branch[0].parameters():
-            param.requires_grad = False
-        
-        for param in self.mouth_branch[0].parameters():
-            param.requires_grad = False
-
         self.fusion_conv = torch.nn.Conv2d(160,80,kernel_size=1)
 
         self.shared_layer = eye_backbone.features[9:17]
