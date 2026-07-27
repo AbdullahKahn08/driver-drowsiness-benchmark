@@ -7,6 +7,7 @@ from src.models.early_fusion_mobilenetv3 import EarlyFusionMobileNetv3
 from src.models.late_fusion_mobilenetv3 import LateFusionMobileNetv3
 from src.models.googlenet import get_googlenet
 from src.models.early_fusion_googlenet import EarlyFusionGoogleNet
+from src.models.late_fusion_googlenet import LateFusionGoogleNet
 from src.data.dataloader import get_dataloaders
 from src.data.dual_stream_dataloader import get_dual_stream_dataloaders
 from torch.nn import CrossEntropyLoss
@@ -27,7 +28,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--model",type=str,required=True,choices=["resnet50","early_fusion_resnet50","late_fusion_resnet50",
                                                                   "mobilenetv3","early_fusion_mobilenetv3","late_fusion_mobilenetv3",
-                                                                  "googlenet","early_fusion_googlenet"])
+                                                                  "googlenet","early_fusion_googlenet","late_fusion_googlenet"])
     parser.add_argument("--epochs",type=int,default=20)
     parser.add_argument("--lr",type=float,default=0.0001)
     parser.add_argument("--batch_size",type=int,default=32)
@@ -61,6 +62,10 @@ if __name__ == '__main__':
 
     elif args.model == "early_fusion_googlenet":
         model = EarlyFusionGoogleNet()
+        training, val, test = get_dual_stream_dataloaders(path=PROCESSED_PATH, batchSize=args.batch_size)
+
+    elif args.model == "late_fusion_googlenet":
+        model = LateFusionGoogleNet()
         training, val, test = get_dual_stream_dataloaders(path=PROCESSED_PATH, batchSize=args.batch_size)
 
         
