@@ -27,12 +27,6 @@ class EarlyFusionGoogleNet(torch.nn.Module):
             mouth_backbone.inception3b
         )
 
-        for param in self.eye_branch[0].parameters():
-            param.requires_grad = False
-
-        for param in self.mouth_branch[0].parameters():
-            param.requires_grad = False
-
         self.fusion_conv = torch.nn.Conv2d(960,480,kernel_size=1)
 
         self.shared_layer = torch.nn.Sequential(

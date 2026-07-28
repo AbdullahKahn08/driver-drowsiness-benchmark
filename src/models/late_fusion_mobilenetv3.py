@@ -10,12 +10,6 @@ class LateFusionMobileNetv3(torch.nn.Module):
         self.eye_branch = eye_backbone.features[0:17]
         self.mouth_branch = mouth_backbone.features[0:17]
 
-        for param in self.eye_branch[0].parameters():
-            param.requires_grad = False
-
-        for param in self.mouth_branch[0].parameters():
-            param.requires_grad = False
-
         self.avgpool = eye_backbone.avgpool
 
         self.fc = torch.nn.Linear(1920,2)
